@@ -9,7 +9,7 @@ def mask_to_cidr(mask):
             mask[i] = "{0:b}".format(int(mask[i])) #Converting into binary as string
             for ix in mask[i]:
                 if ix == "1":
-                    cidr += 1
+                    cidr += 1 #Counting the bits
         else:
             return "INVALID MASK!"
     return cidr
