@@ -1,0 +1,6 @@
+# Converting .py into .exe with PyInstaller
+Install pyinstaller:
+pip install pyinstaller 
+
+cd to where your script is and run the following command (change my_script to your script name):
+python -m PyInstaller my_script.py
