@@ -31,5 +31,3 @@ my_list = ["wellington ", "maciel ", "de ", "oliveira"]
 for obj in my_list:
     print(obj, end="")
 
-
-"second test"
