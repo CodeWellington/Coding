@@ -32,5 +32,4 @@ for obj in my_list:
     print(obj, end="")
 
 
-#TEST FROM DESKTOP
-
+"second test"
