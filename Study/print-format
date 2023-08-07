@@ -27,6 +27,8 @@ print(f"start{name:^50}end")
 
 #Tip - use end="" to print loop in the same line
 
-
+my_list = ["wellington ", "maciel ", "de ", "oliveira"]
+for obj in my_list:
+    print(obj, end="")
 
 
