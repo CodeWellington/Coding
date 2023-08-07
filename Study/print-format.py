@@ -30,3 +30,6 @@ print(f"start{name:^50}end")
 my_list = ["wellington ", "maciel ", "de ", "oliveira"]
 for obj in my_list:
     print(obj, end="")
+
+
+"second test"
