@@ -27,3 +27,4 @@ time.sleep(1)
 #click to enter and pause for 3 seconds
 submit = driver.find_element('xpath', '//*[@id="main-content"]/section[1]/div/div/form/div[2]/button').click()
 time.sleep(10)
+driver.quit()
