@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 #Methods for list
 """
 .append()
