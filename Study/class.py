@@ -8,11 +8,20 @@ class Router:
         self.ports = ports
     def get_des(self):
         '''Return the device information'''
-        desc = f"Model:          {self.model}\n" \
-               f"Software:       {self.software}\n" \
-               f"IP:             {self.ip}"
+        desc = f"Router Model:          {self.model}\n" \
+               f"Software:              {self.software}\n" \
+               f"IP:                    {self.ip}"
+        return desc
+
+class Switch(Router): #Inheriting from previous class
+    def get_des(self):
+        desc = f"Switch Model:          {self.model}\n" \
+               f"Software:              {self.software}\n" \
+               f"IP:                    {self.ip}"
         return desc
 
 
-rtr1 = Router("9300", "16.7.4", "10.10.10.10", "48")
+rtr1 = Router("2021", "16.7.4", "10.10.10.10", "48")
+sw1 = Switch("9300", "10.2.2", "20.20.20.20", "36")
 print(rtr1.get_des())
+print(sw1.get_des())
