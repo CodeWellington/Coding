@@ -20,6 +20,7 @@ df = pd.DataFrame(columns=["Device", "Neighbor", "IP", "Platform"]) #Header
 df.to_csv("D:/IT/Python/Automation/test3.csv", index=False, mode="a+") #Change the path as required, writing the header to csv file
 time.sleep(1)
 for host in hosts: #Looping tru the hosts
+    log_temp = ""
     access = True #reseting the access to True
     try: #first try to access the devices
         config = ssh(host)
