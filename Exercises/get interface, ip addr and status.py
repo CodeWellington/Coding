@@ -5,7 +5,7 @@ import csv
 
 def ssh(host):
     ssh_client = paramiko.SSHClient()  #ssh client from paramiko
-    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) #Helps when the key is unkow
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) #Helps when the key is unkown
     ssh_client.connect(username='admin', password='admin', hostname=host, port=22, timeout=60,  allow_agent=False, look_for_keys=False)
     transport = ssh_client.get_transport()
     session = transport.open_session()
@@ -16,7 +16,7 @@ def ssh(host):
 
 hosts = ["100.64.0.200", "100.64.0.201", "100.64.0.202"]  #List of devices
 df = pd.DataFrame(columns=["Device", "INTERFACE", "IP-ADDRESS", "STATUS"]) #Header
-df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+") #Change the path as required
+df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+") #Change the path as required, writing the header to csv file
 time.sleep(2)
 for host in hosts: #Looping tru the hosts
     try: # first try to access the devices
@@ -44,5 +44,5 @@ for host in hosts: #Looping tru the hosts
     except paramiko.ssh_exception.NoValidConnectionsError:
         print(f"no Access to {host}")
     finally: #write the information to csv
-        df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+", header=False)
+        df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+", header=False) #Change the path as required
         time.sleep(2)
