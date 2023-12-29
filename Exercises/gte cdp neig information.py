@@ -48,7 +48,7 @@ for host in hosts: #Looping tru the hosts
             ip = re.findall(r"Entry address\(es\): \r\n.+:\s(\d+\.\d+\.\d+\.\d+)", log)
             df["IP"] = ip
         except ValueError:
-            df["IP-address"] = "Not found"
+            df["IP"] = "Not found"
         try: #try to find the platform - Platform: <platform>,
             platform = re.findall(r"Platform: (.+),", log)
             df["Platform"] = platform
