@@ -2,6 +2,7 @@ import paramiko
 import re
 import pandas as pd
 import csv
+import time
 
 def ssh(host):
     ssh_client = paramiko.SSHClient()  #ssh client from paramiko
