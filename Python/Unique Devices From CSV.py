@@ -1,16 +1,15 @@
 import csv
+
 devices = []
 my_set = set()
-with open("RTR.csv", "r") as file:
+with open("input_life.csv", "r") as file:
     output = csv.reader(file)
     for row in output:
         my_set.add(tuple(row))
 
-#my_set = set(tuple(x) for x in devices)
-
-
 for obj in my_set:
     devices.append(list(obj))
-with open("RTR_Unic.csv", "w", newline="") as file:
+    
+with open("output_file.csv", "w", newline="") as file:
     writer = csv.writer(file)
     writer.writerows(devices)
