@@ -118,22 +118,22 @@ def send_config(hosts):
     ###Writing the log###
     write_log(log_name, log_file)
 
-
-start_time = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
-log_name = f"Log-{start_time}.txt"  #Log file
-output = f"Results-{start_time}.csv"  # Results in csv format
-
-df = pd.DataFrame(columns=["Device", "Status"])  #Header
-df.to_csv(output, index=False, mode="a+")  #Sending Header to csv
-
-###Reading file###
-configs = read_file()
-
-###Device Configuration###
-devices_config = dev_config(configs)
-
-###Devices to access###
-hosts = devices_config.keys()
-
-###Sending config to hosts###
-send_config(hosts)
+if __name__ == "__main__":
+    start_time = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
+    log_name = f"Log-{start_time}.txt"  #Log file
+    output = f"Results-{start_time}.csv"  # Results in csv format
+    
+    df = pd.DataFrame(columns=["Device", "Status"])  #Header
+    df.to_csv(output, index=False, mode="a+")  #Sending Header to csv
+    
+    ###Reading file###
+    configs = read_file()
+    
+    ###Device Configuration###
+    devices_config = dev_config(configs)
+    
+    ###Devices to access###
+    hosts = devices_config.keys()
+    
+    ###Sending config to hosts###
+    send_config(hosts)
