@@ -1,5 +1,11 @@
 def read_file():
-    # Reading the config file
+    # Reading the hostanames
+    """ example of the csv file
+    Hostname
+    host1
+    host2
+    host3
+    """
     while True:
         file = input("Enter the Host File name to read: ")
         try:
@@ -30,14 +36,14 @@ def write_file(file_name, config_file):
         write.write("Configuration\n")
         for line in config_file:
             write.write(line)
-
-hosts = read_file()
-configuration = [
-    "config t",
-    "<commands>",
-    "end",
-    "write",
-    "!"]
-
-output = config_gen(configuration, hosts)
-write_file(str(input("What is the output file name: ")), output)
+if __name__ == "__main__":
+    configuration = [
+        "config t",
+        "<commands>",
+        "end",
+        "write",
+        "!"]
+    
+    hosts = read_file()
+    full_config = config_gen(configuration, hosts)
+    write_file(str(input("What is the output file name: ")), output)
