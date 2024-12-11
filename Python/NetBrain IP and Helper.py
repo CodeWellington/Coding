@@ -1,5 +1,4 @@
 #Used in NetBrain platform
-
 import re
 def ParseText(_original_result):
     config = _original_result.split("!")
