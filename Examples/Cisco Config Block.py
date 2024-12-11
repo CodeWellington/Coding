@@ -1,8 +1,4 @@
 import re
-##Read a config file##
-with open('config.txt', 'r', newline='') as file:
- lines = file.readlines()
- lines = [line.rstrip('\n\r') for line in lines]
 
 def config_block(file, regex):
   ##Find the block of code based on regex - Ex. ap profile <name> [ap\sprofile\s.*]
@@ -22,6 +18,13 @@ def config_block(file, regex):
    continue
  return output
 
-##Example
-profi_regex = 'ap\sprofile\s.*'
-profi = config_block(lines, profi_regex)
+if __name__ == "__main__":
+
+ ##Read a config file##
+ with open('config.txt', 'r', newline='') as file:
+  lines = file.readlines()
+  lines = [line.rstrip('\n\r') for line in lines]
+ 
+ ##Example
+ profi_regex = 'ap\sprofile\s.*'
+ profi = config_block(lines, profi_regex)
