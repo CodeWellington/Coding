@@ -17,7 +17,7 @@ def ssh(host):
 
 hosts = ["100.64.0.200", "100.64.0.201", "100.64.0.202"]  #List of devices
 df = pd.DataFrame(columns=["Device", "INTERFACE", "IP-ADDRESS", "STATUS"]) #Header
-df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+") #Change the path as required, writing the header to csv file
+df.to_csv("D:/test2.csv", index=False, mode="a+") #Change the path as required, writing the header to csv file
 time.sleep(2)
 for host in hosts: #Looping tru the hosts
     try: # first try to access the devices
@@ -45,5 +45,5 @@ for host in hosts: #Looping tru the hosts
     except paramiko.ssh_exception.NoValidConnectionsError:
         print(f"no Access to {host}")
     finally: #write the information to csv
-        df.to_csv("D:/IT/Python/Automation/test2.csv", index=False, mode="a+", header=False) #Change the path as required
+        df.to_csv("D:/test2.csv", index=False, mode="a+", header=False) #Change the path as required
         time.sleep(2)
