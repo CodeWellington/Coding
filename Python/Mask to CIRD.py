@@ -12,5 +12,10 @@ def mask_to_cidr(mask):
                     cidr += 1 #Counting the bits
         else:
             return "INVALID MASK!"
-    return cidr
+    return "/" + str(cidr)
+
+if __name__ == "__main__":
+    mask = "255.255.255.0"
+    mask_to_cidr(mask)
+    print(mask_to_cidr(mask))
 
