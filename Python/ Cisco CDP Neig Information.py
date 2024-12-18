@@ -6,7 +6,7 @@ import time
 def ssh(host):
     ssh_client = paramiko.SSHClient()  #ssh client from paramiko
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) #Helps when the key is unkown
-    ssh_client.connect(username='admin, password='admin', hostname=host, port=22, timeout=60,  allow_agent=False, look_for_keys=False)
+    ssh_client.connect(username='admin', password='admin', hostname=host, port=22, timeout=60,  allow_agent=False, look_for_keys=False)
     transport = ssh_client.get_transport()
     session = transport.open_session()
     session.invoke_shell()
