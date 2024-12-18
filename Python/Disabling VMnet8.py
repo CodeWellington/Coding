@@ -13,4 +13,3 @@ subprocess.run('netsh interface show interface "VMware Network Adapter VMnet8"')
 time.sleep(4)
 
 ##Convert this scrip to exe and run as admin
-
