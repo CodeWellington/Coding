@@ -1,7 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import time
 
-
 def hostname(dev):
     time.sleep(10)
     return f" - Hostname is: {dev}"
