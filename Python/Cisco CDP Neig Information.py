@@ -40,7 +40,7 @@ if __name__ == "__main__":
                         df["Platform"] = re.search(r"Platform: (.+),", device).group(1)
                     except AttributeError:
                         df["Platform"] = "Not found"
-                    df.to_csv(r"C:\Users\DEOLIWX2\OneDrive - Abbott\Documents\Training\Python/test6.csv", index=False, mode="a+", header=False) #writhing a row to csv without the header
+                    df.to_csv(r"test.csv", index=False, mode="a+", header=False) #writhing a row to csv without the header
             print(f"Access to {host} OK")
         except paramiko.ssh_exception.NoValidConnectionsError:
             print(f"no Access to {host}")
