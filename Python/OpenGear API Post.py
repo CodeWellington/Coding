@@ -1,9 +1,10 @@
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+from getpass import getpass
 import requests
 import json
-from getpass import getpass
-from concurrent.futures import ThreadPoolExecutor
 import time
-from datetime import datetime
+
 
 # Reading file with hosts
 def read_file():
