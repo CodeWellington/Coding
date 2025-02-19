@@ -28,3 +28,5 @@ if __name__ == "__main__":
  ##Example
  profi_regex = 'ap\sprofile\s.*'
  profi = config_block(lines, profi_regex)
+
+ # Test
