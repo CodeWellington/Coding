@@ -1,6 +1,13 @@
 # Converting .py into .exe with PyInstaller
 Install pyinstaller:
-pip install pyinstaller 
+pip install pyinstaller
+or
+python -m pip install pyinstaller
 
-cd to where your script is and run the following command (change my_script to your script name):
+Send your file to the python path (py -c "import sys; print(sys.executable)") and cd
+
+run the following command (change my_script to your script name):
 python -m PyInstaller my_script.py
+
+2 folders will be created, build and dist. Build will have just logs of the build and can be deleted.
+Dist is the one to distribute
