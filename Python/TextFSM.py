@@ -6,6 +6,8 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Border, Side, Font
 from openpyxl.worksheet.table import Table, TableStyleInfo
+from concurrent.futures import ThreadPoolExecutor
+from getpass import getpass
 
 # Reading file with hosts
 def read_file():
@@ -22,10 +24,10 @@ def read_file():
 
 
 # Access Device
-def ssh(host):
+def ssh(host, username, password):
     ssh_client = paramiko.SSHClient()  #ssh client from paramiko
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy()) #Helps when the key is unkown
-    ssh_client.connect(username='ansible', password='ansible', hostname=host, port=22, timeout=60,  allow_agent=False, look_for_keys=False)
+    ssh_client.connect(username=username, password=password, hostname=host, port=22, timeout=60,  allow_agent=False, look_for_keys=False)
     transport = ssh_client.get_transport()
     session = transport.open_session()
     session.invoke_shell()
@@ -87,50 +89,59 @@ def excel_formatting(file_name, sheet_name):
 
 
 def main(file_name, sheet_name):
-    info_dict = {}
+    username = input("Username: ")
+    password = getpass()
 
     # Reading textfsm file
     textfsm_parser = read_textfsm()
 
     # Host to access
-    host = "100.65.0.1"
-
-    # Accessing the device
-    commands = ssh(host)
-
-    # Sending commands
-    commands.send(b"terminal length 0\n")
-    commands.recv(99999999)
-    commands.send(b"show ip interface brief\n")
-    time.sleep(1)
-
-    # output of the commands.send
-    log = str(commands.recv(99999999).decode("utf-8"))
-
-    # Parsing the data
-    parsed_data = textfsm_parser.ParseText(log)
-
-    # Formating the data
-    parsed_output = [dict(zip(textfsm_parser.header, row)) for row in parsed_data]
-    print(json.dumps(parsed_output, indent=4))
+    host_file = read_file()
 
     # Header
-    df = pd.DataFrame(columns=textfsm_parser.header)
+    header = textfsm_parser.header
+    header[0] = "Device"
+    df = pd.DataFrame(columns=header)
 
-    # writhing each row to csv without the header
-    for row in parsed_output:
-        new_row = {}
-        for k, v in row.items():
-            new_row[k] = [v]
-        new_row = pd.DataFrame(new_row)
-        df = pd.concat([df, new_row], ignore_index=True)
+    # Accessing the devices
+    with ThreadPoolExecutor(max_workers=40) as executor:
+        future_to_device = {executor.submit(ssh, host, username, password): host for host in host_file}
+
+        # Process each result as they complete
+        for future, host in future_to_device.items():
+            try:
+                commands = future.result()
+                # Sending commands
+                commands.send(b"terminal length 0\n")
+                commands.recv(99999999)
+                commands.send(b"show ip interface brief\n")
+                time.sleep(1)
+
+                # output of the commands.send
+                log = str(commands.recv(99999999).decode("utf-8"))
+                # Parsing the data
+                parsed_data = textfsm_parser.ParseText(log)
+
+                # Formating the data
+                parsed_output = [dict(zip(textfsm_parser.header, row)) for row in parsed_data]
+                # Uncomment the print to see the raw information
+                #print(json.dumps(parsed_output, indent=4))
+                # writhing each row
+                for row in parsed_output:
+                    new_row = {"Device": host}
+                    for k, v in row.items():
+                        new_row[k] = [v]
+                    new_row = pd.DataFrame(new_row)
+                    df = pd.concat([df, new_row], ignore_index=True)
+
+            except Exception as e:
+                print(str(e))
+
     df.to_excel(file_name, sheet_name=sheet_name, index=False)
 
 file_name = str(input("Enter the output file name: ")) + ".xlsx"
 sheet_name = "Inventory"
 main(file_name,sheet_name)
 excel_formatting(file_name, sheet_name)
-
-
 
 
