@@ -1,0 +1,47 @@
+# Enter in tcl mode
+tclsh
+
+# Create the mac table file with the current information
+set output [exec "show mac address-table | ex Total Mac Addresses"]
+set mac_table [open "flash:mac_table.txt" w]
+puts $mac_table $output
+close $mac_table
+
+# Create the tcl script
+puts [open "flash:show_mac.tcl" w+] {
+    # open the file
+    set mac_table_file [open "flash:mac_table.txt" r]
+
+    # read the table into var mac_table_contents
+    set mac_table_contents [read $mac_table_file]
+    close $mac_table_file
+
+    # open file in append mode
+    set mac_table_file [open "flash:mac_table.txt" a]
+
+    # get the live information
+    set current [exec "show mac address-table | ex Total Mac Addresses"]
+
+    # check if the mac is already in the table, if not add it
+    foreach line [split $current "\n"] {
+    if {[regexp {(\S+)\s+(\S+)\s+(\S+)\s+(\S+)} $line -> vlan mac type port]} {
+        if {![string match "*$mac*" $mac_table_contents]} {
+            puts $mac_table_file " $vlan    $mac    $type     $port -> (NEW) at [clock format [clock seconds]]"
+        }
+    }
+}
+    close $mac_table_file
+}
+exit
+
+#Configure EEM
+
+configure terminal
+event manager applet Run_TCL_Script authorization bypass
+event timer watchdog time 290
+action 1.0 cli command "enable"
+action 2.0 cli command "tclsh flash:show_mac.tcl"
+action 3.0 syslog msg "TCL script executed successfully"
+end
+wr
+!
