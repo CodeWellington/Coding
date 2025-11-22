@@ -2,9 +2,35 @@
 tclsh
 
 # Create the mac table file with the current information
-set output [exec "show mac address-table | ex Total Mac Addresses"]
+set output [exec "show mac address-table | ex Total Mac Addresses|Vlan|---"]
 set mac_table [open "flash:mac_table.txt" w]
-puts $mac_table $output
+
+# Header
+puts $mac_table "-Vlan-   --Mac Address--   --Type--    ----IP----          -Ports-       ----------Timestamp----------"
+
+# Device tracking
+set device_tracking [exec "show device-tracking database"]
+
+# parse device tracking information to extract IP and MAC addresses
+array set ip_mac_map {}
+foreach line [split $device_tracking "\n"] {
+    if {[regexp {^(\S+)\s+(\d+\.\d+\.\d+\.\d+)\s+(\S+)\s+(\S+)} $line -> protocol ip mac interface]} {
+        set ip_mac_map($mac) $ip
+    }
+}
+
+# Send the initial information to the file
+foreach line [split $output "\n"] {
+    if {[regexp {(\S+)\s+(\S+)\s+(\S+)\s+(\S+)} $line -> vlan mac type port]} {
+        if {[info exists ip_mac_map($mac)]} {
+            set ip $ip_mac_map($mac)
+        } else {
+            set ip "Not_Found    "
+        }
+        puts $mac_table " $vlan     $mac     $type     $ip        $port          [clock format [clock seconds]]"
+    }
+}
+
 close $mac_table
 
 # Create the tcl script
@@ -20,19 +46,35 @@ puts [open "flash:show_mac.tcl" w+] {
     set mac_table_file [open "flash:mac_table.txt" a]
 
     # get the live information
-    set current [exec "show mac address-table | ex Total Mac Addresses"]
+    set current [exec "show mac address-table | ex Total Mac Addresses|Vlan|---"]
 
-    # check if the mac is already in the table, if not add it
+    # get device tracking information
+    set device_tracking [exec "show device-tracking database"]
+
+    # parse device tracking information to extract IP and MAC addresses
+    array set ip_mac_map {}
+    foreach line [split $device_tracking "\n"] {
+        if {[regexp {^(\S+)\s+(\d+\.\d+\.\d+\.\d+)\s+(\S+)\s+(\S+)} $line -> protocol ip mac interface]} {
+            set ip_mac_map($mac) $ip
+        } else {
+            set ip "Not_Found    "
+        }
+    }
+    # check if the mac is already in the table, if not add it with IP
     foreach line [split $current "\n"] {
     if {[regexp {(\S+)\s+(\S+)\s+(\S+)\s+(\S+)} $line -> vlan mac type port]} {
         if {![string match "*$mac*" $mac_table_contents]} {
-            puts $mac_table_file " $vlan    $mac    $type     $port -> (NEW) at [clock format [clock seconds]]"
+             if {[info exists ip_mac_map($mac)]} {
+                 set ip $ip_mac_map($mac)
+            }
+                puts $mac_table_file " $vlan     $mac     $type     $ip        $port          (NEW)-[clock format [clock seconds]]"
+            }
         }
     }
-}
     close $mac_table_file
 }
 exit
+
 
 #Configure EEM
 
